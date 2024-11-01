@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LocalStorageKeys } from '../types/types';
+import { LocalStorageKeys } from '@/types/types';
 
 function useTypedLocalStorage<T>(key: LocalStorageKeys, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(() => {

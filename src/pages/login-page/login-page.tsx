@@ -1,9 +1,12 @@
 import css from "./login-page.module.css";
-import { Button } from "../../components/shared";
-import { useDispatch } from "react-redux";
-import { login } from "../../redux/reducers/login-slice";
+
 import { useNavigate } from "react-router-dom";
-import useTypedLocalStorage from "../../hooks/useTypedLocalStorage";
+import { useDispatch } from "react-redux";
+
+import { Button } from "@/components/shared";
+
+import { login } from "@/redux/reducers/login-slice";
+import useTypedLocalStorage from "@/hooks/useTypedLocalStorage";
 
 export default function LoginPage() {
   const navigate = useNavigate();

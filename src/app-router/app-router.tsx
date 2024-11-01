@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { RootState } from "../redux/store";
+import { RootState } from "@/redux/store";
 
-import LoginPage from "../pages/login-page/login-page";
-import CharactersPage from "../pages/characters-page/characters-page";
-import PlanetsPage from "../pages/planets-page/planets-page";
-import SpaceshipsPage from "../pages/spaceships-page/spaceships-page";
-import NotFoundPage from "../pages/not-found-page/not-found-page";
+import LoginPage from "@/pages/login-page/login-page";
+import CharactersPage from "@/pages/characters-page/characters-page";
+import PlanetsPage from "@/pages/planets-page/planets-page";
+import SpaceshipsPage from "@/pages/spaceships-page/spaceships-page";
+import NotFoundPage from "@/pages/not-found-page/not-found-page";
 
 import { PrivateLayout, PublicLayout } from "./app-layouts";
 

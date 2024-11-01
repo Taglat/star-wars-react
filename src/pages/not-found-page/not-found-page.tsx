@@ -1,7 +1,7 @@
 import css from "./not-found-page.module.css";
 import { useNavigate } from "react-router-dom";
 
-import { Button } from "../../components/shared";
+import { Button } from "@/components/shared";
 
 export default function NotFoundPage({ isLogined }: { isLogined: boolean }) {
   const navigate = useNavigate();

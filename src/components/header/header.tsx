@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "../shared";
 import css from "./header.module.css";
-import { logout } from "../../redux/reducers/login-slice";
-import { useNavigate } from "react-router-dom";
-import { RootState } from "../../redux/store";
-import useTypedLocalStorage from "../../hooks/useTypedLocalStorage";
+import { logout } from "@/redux/reducers/login-slice";
+import { RootState } from "@/redux/store";
+import useTypedLocalStorage from "@/hooks/useTypedLocalStorage";
 
 export function Header() {
   const navigate = useNavigate();
