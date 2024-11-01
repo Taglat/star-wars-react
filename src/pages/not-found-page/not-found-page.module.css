@@ -1,6 +1,6 @@
 .root {
   display: flex;
-  height: 100svh;
+  height: 60vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;

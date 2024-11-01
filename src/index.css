@@ -14,8 +14,6 @@
 body, html {
   height: 100svh;
   width: 100%;
-  display: flex;
-  justify-content: center;
 }
 
 body {
