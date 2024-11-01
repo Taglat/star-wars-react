@@ -1,0 +1,19 @@
+.root {
+  display: flex;
+  height: 100svh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.text h2 {
+  font-size: 2rem;
+}

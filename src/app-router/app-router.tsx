@@ -34,7 +34,7 @@ const privateRoutes: AppRoute[] = [
 ];
 
 export default function AppRouter() {
-  const isLogined = false;
+  const isLogined = true;
 
   return (
     <BrowserRouter>
@@ -46,7 +46,7 @@ export default function AppRouter() {
           : publicRouter.map((route) => (
               <Route path={route.path} element={route.element} />
             ))}
-        <Route path="*" element={<NotFoundPage  />} />
+        <Route path="*" element={<NotFoundPage isLogined={isLogined} />} />
       </Routes>
     </BrowserRouter>
   );
