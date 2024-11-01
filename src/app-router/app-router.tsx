@@ -1,4 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import { RootState } from "../redux/store";
 
 import LoginPage from "../pages/login-page/login-page";
 import CharactersPage from "../pages/characters-page/characters-page";
@@ -36,7 +39,7 @@ const privateRoutes: AppRoute[] = [
 ];
 
 export default function AppRouter() {
-  const isLogined = true;
+  const isLogined = useSelector((state: RootState) => state.login.email !== "");
 
   return (
     <BrowserRouter>
