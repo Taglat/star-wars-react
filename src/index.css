@@ -1,0 +1,37 @@
+:root {
+  --main-color: #000;
+  --bg-color: #fff;
+  --link-color: #00ffff;
+  --active-link-color: #0000ff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100svh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  color: var(--main-color);
+  background-color: var(--bg-color);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a.active {
+  color: var(--active-link-color);
+}
