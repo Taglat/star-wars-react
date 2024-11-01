@@ -6,6 +6,8 @@ import PlanetsPage from "../pages/planets-page/planets-page";
 import SpaceshipsPage from "../pages/spaceships-page/spaceships-page";
 import NotFoundPage from "../pages/not-found-page/not-found-page";
 
+import Layout from "../components/layout/layout";
+
 type AppRoute = {
   path: string;
   element: JSX.Element;
@@ -39,13 +41,19 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {isLogined
-          ? privateRoutes.map((route) => (
-              <Route path={route.path} element={route.element} />
-            ))
-          : publicRouter.map((route) => (
-              <Route path={route.path} element={route.element} />
+        {isLogined ? (
+          <Route element={<Layout />}>
+            {privateRoutes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
             ))}
+          </Route>
+        ) : (
+          <Route element={<Layout />}>
+          {publicRouter.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+          </Route>
+        )}
         <Route path="*" element={<NotFoundPage isLogined={isLogined} />} />
       </Routes>
     </BrowserRouter>
