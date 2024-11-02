@@ -11,9 +11,11 @@ const loginSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<UserType>) => {
       state.email = action.payload.email;
+      localStorage.setItem("email", action.payload.email);
     },
     logout: (state) => {
       state.email = "";
+      localStorage.removeItem("email");
     },
   },
 });

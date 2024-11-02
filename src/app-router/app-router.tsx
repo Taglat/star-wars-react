@@ -39,7 +39,8 @@ const privateRoutes: AppRoute[] = [
 ];
 
 export default function AppRouter() {
-  const isLogined = useSelector((state: RootState) => state.login.email !== "");
+  const email = useSelector((state: RootState) => state.login.email);
+  const isLogined = email !== "";
 
   return (
     <BrowserRouter>

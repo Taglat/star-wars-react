@@ -5,19 +5,16 @@ import { Button } from "../shared";
 import css from "./header.module.css";
 import { logout } from "@/redux/reducers/login-slice";
 import { RootState } from "@/redux/store";
-import useTypedLocalStorage from "@/hooks/useTypedLocalStorage";
 
 export function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [_, setEmailLocStorage] = useTypedLocalStorage("email", "");
 
   const email = useSelector((state: RootState) => state.login.email);
 
 
   const handleLogout = () => {
     dispatch(logout());
-    setEmailLocStorage("");
     navigate("/login");
   };
 
