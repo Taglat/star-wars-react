@@ -1,8 +1,6 @@
 .root {
   background: #777;
   padding: 10px 0;
-  position: sticky;
-  top: 0;
   
   ul {
     display: flex;

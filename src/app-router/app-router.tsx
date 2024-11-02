@@ -11,6 +11,9 @@ import NotFoundPage from "@/pages/not-found-page/not-found-page";
 
 import { PrivateLayout, PublicLayout } from "./app-layouts";
 import MainPage from "@/pages/main-page/main-page";
+import CharacterPage from "@/pages/chatacter-page/character-page";
+import SpaceshipPage from "@/pages/spaceship-page/spaceship-page";
+import PlanetPage from "@/pages/planet-page/planet-page";
 
 type AppRoute = {
   path: string;
@@ -34,12 +37,24 @@ const privateRoutes: AppRoute[] = [
     element: <CharactersPage />,
   },
   {
+    path: "/characters/:id",
+    element: <CharacterPage />,
+  },
+  {
     path: "/planets",
     element: <PlanetsPage />,
   },
   {
+    path: "/planets/:id",
+    element: <PlanetPage />,
+  },
+  {
     path: "/spaceships",
     element: <SpaceshipsPage />,
+  },
+  {
+    path: "/spaceships/:id",
+    element: <SpaceshipPage />,
   },
 ];
 
