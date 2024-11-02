@@ -1,0 +1,43 @@
+/* pagination.module.css */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.button, .page {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.page.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.page:hover:not(.active) {
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 600px) {
+  .page {
+    display: none;
+  }
+  .page:first-child,
+  .page:last-child,
+  .page.active {
+    display: inline-block;
+  }
+}
