@@ -7,7 +7,7 @@ export function Navbar() {
       <ul>
         <li>
           <NavLink
-            to="/"
+            to="/characters"
             className={({ isActive }) => (isActive ? css.active : "")}
           >
             Characters
