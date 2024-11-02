@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { Button } from "@/components/shared";
 
 import { login } from "@/redux/reducers/login-slice";
+import LoginForm from "@/components/login-form/login-form";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -17,5 +18,9 @@ export default function LoginPage() {
     navigate("/")
   };
 
-  return <Button onClick={handleLogin}>Login</Button>;
+  return (<div className={css.root}>
+    <div className={css.text}>TEXT</div>
+    <LoginForm />
+  </div>)
+  
 }
