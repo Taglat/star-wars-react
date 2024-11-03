@@ -21,6 +21,10 @@ type AppRoute = {
 
 const publicRouter: AppRoute[] = [
   {
+    path: "/",
+    element: <Navigate to={"/login"} />,
+  },
+  {
     path: "/login",
     element: <LoginPage />,
   },
