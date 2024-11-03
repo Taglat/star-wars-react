@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface PlanetsState {
-  data: IPlanet[];
+  data: { [page: number]: IPlanet[] };
   loadedPages: number[];
   loading: boolean;
   page: number;
@@ -12,7 +12,7 @@ interface PlanetsState {
 }
 
 const initialState: PlanetsState = {
-  data: [],
+  data: {},
   loadedPages: [],
   loading: false,
   page: 1,
@@ -20,19 +20,12 @@ const initialState: PlanetsState = {
   error: null,
 };
 
-const loadLocalStorageData = (): IPlanet[] => {
-  const storedData = localStorage.getItem("planets");
-  return storedData ? JSON.parse(storedData) : [];
-};
-
-const initialLocalData = loadLocalStorageData();
-
 export const fetchPlanets = createAsyncThunk(
   "planets/fetchPlanets",
   async (page: number, { getState, rejectWithValue }) => {
     const state = getState() as { planets: PlanetsState };
 
-    if (state.planets.loadedPages.includes(page)) {
+    if (state.planets.data[page]) {
       return null;
     }
 
@@ -51,18 +44,20 @@ export const fetchPlanets = createAsyncThunk(
 
 const planetsSlice = createSlice({
   name: "planets",
-  initialState: {
-    ...initialState,
-    data: initialLocalData,
-  },
+  initialState,
   reducers: {
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
     },
     updatePlanet: (state, action: PayloadAction<IPlanet>) => {
-      const index = state.data.findIndex((planet) => planet.url === action.payload.url);
-      if (index !== -1) {
-        state.data[index] = action.payload;
+      const pageEntries = Object.entries(state.data);
+      for (let [, planets] of pageEntries) {
+        const index = planets.findIndex((char) => char.url === action.payload.url);
+        if (index !== -1) {
+          planets[index] = action.payload;
+          localStorage.setItem("planets", JSON.stringify(state.data));
+          break;
+        }
       }
       localStorage.setItem("planets", JSON.stringify(state.data));
       alert("Сохранено")
@@ -73,28 +68,19 @@ const planetsSlice = createSlice({
       .addCase(fetchPlanets.pending, (state) => {
         state.loading = true;
         state.error = null;
-        console.log('fetchPlanets.pending')
       })
       .addCase(fetchPlanets.fulfilled, (state, action) => {
-        console.log('fetchPlanets.fulfilled')
-
         state.loading = false;
         if (action.payload) {
           const { data, page, totalPages } = action.payload;
 
-          const uniqueData = data.filter(
-            (newPlanet:Partial<IPlanet>) => !state.data.some((existingPlanet) => existingPlanet.url === newPlanet.url)
-          );
-
-          state.data = [...state.data, ...uniqueData];
-          state.loadedPages.push(page);
+          state.data[page] = data;
           state.totalPages = totalPages;
 
           localStorage.setItem("planets", JSON.stringify(state.data));
         }
       })
       .addCase(fetchPlanets.rejected, (state, action) => {
-        console.log('fetchPlanets.rejected')
         state.loading = false;
         state.error = action.payload as string;
       });

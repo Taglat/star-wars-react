@@ -17,9 +17,11 @@ type FormValues = {
 export default function SpaceshipPage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
-  const spaceship = useSelector((state: RootState) =>
-    state.spaceships.data.find((spaceship) => spaceship.url.endsWith(`/${id}/`))
-  );
+  
+  const spaceship = useSelector((state: RootState) => {
+    const allSpaceships = Object.values(state.spaceships.data).flat();
+    return allSpaceships.find((char) => char.url.endsWith(`/${id}/`));
+  });
 
   const { register, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {

@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface SpaceshipsState {
-  data: IStarship[];
+  data: { [page: number]: IStarship[] };
   loadedPages: number[];
   loading: boolean;
   page: number;
@@ -12,7 +12,7 @@ interface SpaceshipsState {
 }
 
 const initialState: SpaceshipsState = {
-  data: [],
+  data: {},
   loadedPages: [],
   loading: false,
   page: 1,
@@ -20,19 +20,12 @@ const initialState: SpaceshipsState = {
   error: null,
 };
 
-const loadLocalStorageData = (): IStarship[] => {
-  const storedData = localStorage.getItem("spaceships");
-  return storedData ? JSON.parse(storedData) : [];
-};
-
-const initialLocalData = loadLocalStorageData();
-
 export const fetchSpaceships = createAsyncThunk(
   "spaceships/fetchSpaceships",
   async (page: number, { getState, rejectWithValue }) => {
     const state = getState() as { spaceships: SpaceshipsState };
 
-    if (state.spaceships.loadedPages.includes(page)) {
+    if (state.spaceships.data[page]) {
       return null;
     }
 
@@ -51,50 +44,42 @@ export const fetchSpaceships = createAsyncThunk(
 
 const spaceshipsSlice = createSlice({
   name: "spaceships",
-  initialState: {
-    ...initialState,
-    data: initialLocalData,
-  },
+  initialState,
   reducers: {
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
     },
     updateSpaceship: (state, action: PayloadAction<IStarship>) => {
-      const index = state.data.findIndex((spaceship) => spaceship.url === action.payload.url);
-      if (index !== -1) {
-        state.data[index] = action.payload;
+      const pageEntries = Object.entries(state.data);
+      for (let [, spaceships] of pageEntries) {
+        const index = spaceships.findIndex((char) => char.url === action.payload.url);
+        if (index !== -1) {
+          spaceships[index] = action.payload;
+          localStorage.setItem("spaceships", JSON.stringify(state.data));
+          break;
+        }
       }
-      localStorage.setItem("spaceships", JSON.stringify(state.data));
-      alert("Сохранено")
-    },
+      alert("Сохранено");
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSpaceships.pending, (state) => {
         state.loading = true;
         state.error = null;
-        console.log('fetchSpaceships.pending')
       })
       .addCase(fetchSpaceships.fulfilled, (state, action) => {
-        console.log('fetchSpaceships.fulfilled')
-
         state.loading = false;
         if (action.payload) {
           const { data, page, totalPages } = action.payload;
 
-          const uniqueData = data.filter(
-            (newSpaceship:Partial<IStarship>) => !state.data.some((existingSpaceship) => existingSpaceship.url === newSpaceship.url)
-          );
-
-          state.data = [...state.data, ...uniqueData];
-          state.loadedPages.push(page);
+          state.data[page] = data;
           state.totalPages = totalPages;
 
           localStorage.setItem("spaceships", JSON.stringify(state.data));
         }
       })
       .addCase(fetchSpaceships.rejected, (state, action) => {
-        console.log('fetchSpaceships.rejected')
         state.loading = false;
         state.error = action.payload as string;
       });

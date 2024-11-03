@@ -18,9 +18,11 @@ type FormValues = {
 export default function CharacterPage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
-  const character = useSelector((state: RootState) =>
-    state.characters.data.find((char) => char.url.endsWith(`/${id}/`))
-  );
+
+  const character = useSelector((state: RootState) => {
+    const allCharacters = Object.values(state.characters.data).flat();
+    return allCharacters.find((char) => char.url.endsWith(`/${id}/`));
+  });
 
   const { register, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {

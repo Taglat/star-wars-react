@@ -3,8 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface CharactersState {
-  data: IPeople[];
-  loadedPages: number[];
+  data: { [page: number]: IPeople[] };
   loading: boolean;
   page: number;
   totalPages: number;
@@ -12,27 +11,19 @@ interface CharactersState {
 }
 
 const initialState: CharactersState = {
-  data: [],
-  loadedPages: [],
+  data: {},
   loading: false,
   page: 1,
   totalPages: 0,
   error: null,
 };
 
-const loadLocalStorageData = (): IPeople[] => {
-  const storedData = localStorage.getItem("characters");
-  return storedData ? JSON.parse(storedData) : [];
-};
-
-const initialLocalData = loadLocalStorageData();
-
 export const fetchCharacters = createAsyncThunk(
   "characters/fetchCharacters",
   async (page: number, { getState, rejectWithValue }) => {
     const state = getState() as { characters: CharactersState };
 
-    if (state.characters.loadedPages.includes(page)) {
+    if (state.characters.data[page]) {
       return null;
     }
 
@@ -51,21 +42,22 @@ export const fetchCharacters = createAsyncThunk(
 
 const charactersSlice = createSlice({
   name: "characters",
-  initialState: {
-    ...initialState,
-    data: initialLocalData,
-  },
+  initialState,
   reducers: {
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
     },
     updateCharacter: (state, action: PayloadAction<IPeople>) => {
-      const index = state.data.findIndex((char) => char.url === action.payload.url);
-      if (index !== -1) {
-        state.data[index] = action.payload;
+      const pageEntries = Object.entries(state.data);
+      for (let [, characters] of pageEntries) {
+        const index = characters.findIndex((char) => char.url === action.payload.url);
+        if (index !== -1) {
+          characters[index] = action.payload;
+          localStorage.setItem("characters", JSON.stringify(state.data));
+          break;
+        }
       }
-      localStorage.setItem("characters", JSON.stringify(state.data));
-      alert("Сохранено")
+      alert("Сохранено");
     },
   },
   extraReducers: (builder) => {
@@ -79,12 +71,7 @@ const charactersSlice = createSlice({
         if (action.payload) {
           const { data, page, totalPages } = action.payload;
 
-          const uniqueData = data.filter(
-            (newChar:Partial<IPeople>) => !state.data.some((existingChar) => existingChar.url === newChar.url)
-          );
-
-          state.data = [...state.data, ...uniqueData];
-          state.loadedPages.push(page);
+          state.data[page] = data;
           state.totalPages = totalPages;
 
           localStorage.setItem("characters", JSON.stringify(state.data));

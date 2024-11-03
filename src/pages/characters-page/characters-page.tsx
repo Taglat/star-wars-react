@@ -14,24 +14,25 @@ export default function CharactersPage() {
   );
 
   useEffect(() => {
-    dispatch(fetchCharacters(page));
-  }, [dispatch, page]);
+    if (!data[page]) {
+      dispatch(fetchCharacters(page));
+    }
+  }, [dispatch, page, data]);
 
-  const itemsPerPage = 10;
-  const startIndex = (page - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const currentPageData = data.slice(startIndex, endIndex);
+  const currentPageData = data[page] || [];
 
   const handlePageChange = (newPage: number) => {
     dispatch(setPage(newPage));
   };
 
-  if (loading) return;
-  <div className={css.container}>
-    <h1 className={css.title}>Персонажи</h1>
-    <div className={css.loading}>Загрузка...</div>
-  </div>;
+  if (loading) {
+    return (
+      <div className={css.container}>
+        <h1 className={css.title}>Персонажи</h1>
+        <div className={css.loading}>Загрузка...</div>
+      </div>
+    );
+  }
 
   return (
     <div className={css.container}>

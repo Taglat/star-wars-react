@@ -16,10 +16,12 @@ type FormValues = {
 
 export default function PlanetPage() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch();
-  const planet = useSelector((state: RootState) =>
-    state.planets.data.find((planet) => planet.url.endsWith(`/${id}/`))
-  );
+  const dispatch = useDispatch(); 
+  
+  const planet = useSelector((state: RootState) => {
+    const allPlanets = Object.values(state.planets.data).flat();
+    return allPlanets.find((char) => char.url.endsWith(`/${id}/`));
+  });
 
   const { register, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
