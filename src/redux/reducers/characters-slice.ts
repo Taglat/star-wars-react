@@ -4,6 +4,7 @@ import axios from "axios";
 
 interface CharactersState {
   data: IPeople[];
+  loadedPages: number[];
   loading: boolean;
   page: number;
   totalPages: number;
@@ -12,19 +13,34 @@ interface CharactersState {
 
 const initialState: CharactersState = {
   data: [],
+  loadedPages: [],
   loading: false,
   page: 1,
   totalPages: 0,
   error: null,
 };
 
+const loadLocalStorageData = (): IPeople[] => {
+  const storedData = localStorage.getItem("characters");
+  return storedData ? JSON.parse(storedData) : [];
+};
+
+const initialLocalData = loadLocalStorageData();
+
 export const fetchCharacters = createAsyncThunk(
   "characters/fetchCharacters",
-  async (page: number, { rejectWithValue }) => {
+  async (page: number, { getState, rejectWithValue }) => {
+    const state = getState() as { characters: CharactersState };
+
+    if (state.characters.loadedPages.includes(page)) {
+      return null;
+    }
+
     try {
       const response = await axios.get(`${import.meta.env.VITE_API}people/?page=${page}`);
       return {
         data: response.data.results,
+        page,
         totalPages: Math.ceil(response.data.count / 10),
       };
     } catch (error: any) {
@@ -35,10 +51,21 @@ export const fetchCharacters = createAsyncThunk(
 
 const charactersSlice = createSlice({
   name: "characters",
-  initialState,
+  initialState: {
+    ...initialState,
+    data: initialLocalData,
+  },
   reducers: {
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
+    },
+    updateCharacter: (state, action: PayloadAction<IPeople>) => {
+      const index = state.data.findIndex((char) => char.url === action.payload.url);
+      if (index !== -1) {
+        state.data[index] = action.payload;
+      }
+      localStorage.setItem("characters", JSON.stringify(state.data));
+      alert("Сохранено")
     },
   },
   extraReducers: (builder) => {
@@ -49,8 +76,19 @@ const charactersSlice = createSlice({
       })
       .addCase(fetchCharacters.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data;
-        state.totalPages = action.payload.totalPages;
+        if (action.payload) {
+          const { data, page, totalPages } = action.payload;
+
+          const uniqueData = data.filter(
+            (newChar:Partial<IPeople>) => !state.data.some((existingChar) => existingChar.url === newChar.url)
+          );
+
+          state.data = [...state.data, ...uniqueData];
+          state.loadedPages.push(page);
+          state.totalPages = totalPages;
+
+          localStorage.setItem("characters", JSON.stringify(state.data));
+        }
       })
       .addCase(fetchCharacters.rejected, (state, action) => {
         state.loading = false;
@@ -59,5 +97,5 @@ const charactersSlice = createSlice({
   },
 });
 
-export const { setPage } = charactersSlice.actions;
+export const { setPage, updateCharacter } = charactersSlice.actions;
 export default charactersSlice.reducer;

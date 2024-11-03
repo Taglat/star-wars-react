@@ -41,5 +41,5 @@
 .root_theme_secondary {
   background: var(--background-color);
   color: var(--main-color);
-  border: 2px solid var(--text-color);
+  border: 1px solid var(--main-color);
 }

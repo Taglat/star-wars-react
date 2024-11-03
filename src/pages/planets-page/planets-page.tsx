@@ -1,4 +1,4 @@
-import css from "./Planets-page.module.css";
+import css from "./planets-page.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect } from "react";
@@ -9,23 +9,43 @@ import { IPlanet } from "@/types/types";
 
 export default function PlanetsPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { data, loading, page, totalPages } = useSelector((state: RootState) => state.planets);
+  const { data, loading, page, totalPages } = useSelector(
+    (state: RootState) => state.planets
+  );
 
   useEffect(() => {
     dispatch(fetchPlanets(page));
   }, [dispatch, page]);
 
+  const itemsPerPage = 10;
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const currentPageData = data.slice(startIndex, endIndex);
+
   const handlePageChange = (newPage: number) => {
     dispatch(setPage(newPage));
   };
 
-  if (loading) return <div className={css.loading}>Loading...</div>;
+  if (loading) return;
+  <div className={css.container}>
+    <h1 className={css.title}>Планеты</h1>
+    <div className={css.loading}>Загрузка...</div>
+  </div>;
 
   return (
     <div className={css.container}>
-      <h1 className={css.title}>Planets</h1>
-      <EntityTable<IPlanet> data={data} columns={["name", "diameter", "population"]} entityType="planets" />
-      <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+      <h1 className={css.title}>Планеты</h1>
+      <EntityTable<IPlanet>
+        data={currentPageData}
+        columns={["name", "population", "diameter"]}
+        entityType="planets"
+      />
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

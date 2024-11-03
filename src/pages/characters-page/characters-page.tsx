@@ -9,23 +9,43 @@ import { IPeople } from "@/types/types";
 
 export default function CharactersPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { data, loading, page, totalPages } = useSelector((state: RootState) => state.characters);
+  const { data, loading, page, totalPages } = useSelector(
+    (state: RootState) => state.characters
+  );
 
   useEffect(() => {
     dispatch(fetchCharacters(page));
   }, [dispatch, page]);
 
+  const itemsPerPage = 10;
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const currentPageData = data.slice(startIndex, endIndex);
+
   const handlePageChange = (newPage: number) => {
     dispatch(setPage(newPage));
   };
 
-  if (loading) return <div className={css.loading}>Loading...</div>;
+  if (loading) return;
+  <div className={css.container}>
+    <h1 className={css.title}>Персонажи</h1>
+    <div className={css.loading}>Загрузка...</div>
+  </div>;
 
   return (
     <div className={css.container}>
-      <h1 className={css.title}>Characters</h1>
-      <EntityTable<IPeople> data={data} columns={["name", "height", "mass", "gender"]} entityType="characters" />
-      <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+      <h1 className={css.title}>Персонажи</h1>
+      <EntityTable<IPeople>
+        data={currentPageData}
+        columns={["name", "height", "mass", "gender"]}
+        entityType="characters"
+      />
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }
