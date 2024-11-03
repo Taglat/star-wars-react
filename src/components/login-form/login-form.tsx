@@ -20,7 +20,6 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     setValue,
   } = useForm<FormValues>({
     mode: "onSubmit",
@@ -30,7 +29,6 @@ export default function LoginForm() {
     const {email, password} = data;
     if (email === import.meta.env.VITE_EMAIL && password === import.meta.env.VITE_PASSWORD) {
       dispatch(login({email}));
-      // reset();
       navigate('/');
     }
   };

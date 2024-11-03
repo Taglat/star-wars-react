@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { RootState } from "@/redux/store";
@@ -10,7 +10,6 @@ import SpaceshipsPage from "@/pages/spaceships-page/spaceships-page";
 import NotFoundPage from "@/pages/not-found-page/not-found-page";
 
 import { PrivateLayout, PublicLayout } from "./app-layouts";
-import MainPage from "@/pages/main-page/main-page";
 import CharacterPage from "@/pages/chatacter-page/character-page";
 import SpaceshipPage from "@/pages/spaceship-page/spaceship-page";
 import PlanetPage from "@/pages/planet-page/planet-page";
@@ -30,7 +29,7 @@ const publicRouter: AppRoute[] = [
 const privateRoutes: AppRoute[] = [
   {
     path: "/",
-    element: <MainPage />,
+    element: <Navigate to={"/characters"} />,
   },
   {
     path: "/characters",

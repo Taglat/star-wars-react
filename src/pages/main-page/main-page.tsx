@@ -1,5 +1,0 @@
-import css from "./main-page.module.css";
-
-export default function MainPage() {
-  return <div>main-page</div>;
-}

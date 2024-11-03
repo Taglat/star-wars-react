@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type { ReactNode } from "react";
-import css from "./Button.module.css";
+import css from "./button.module.css";
 
 type ButtonTheme = "primary" | "secondary";
 
